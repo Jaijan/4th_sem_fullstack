@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Text Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+        }
+        .result {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #ddd;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 4px;
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Text Analysis</h1>
+    <div class="result">
+        <p><strong>Input Text:</strong> {{ input_text }}</p>
+        <p><strong>Number of Vowels:</strong> {{ vowel_count }}</p>
+        <p><strong>Number of Consonants:</strong> {{ consonant_count }}</p>
+        
+        <h2>Vowels</h2>
+        {% if vowels %}
+            <ul>
+            {% for v in vowels %}
+                <li>{{ v }}</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No vowels found.</p>
+        {% endif %}
+
+        <h2>Consonants</h2>
+        {% if consonants %}
+            <ul>
+            {% for c in consonants %}
+                <li>{{ c }}</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No consonants found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
