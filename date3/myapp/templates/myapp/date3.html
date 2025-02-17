@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yayayyyyyyyyy</title>
+  <!-- Futuristic font from Google Fonts: Audiowide -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: 'Audiowide', cursive;
+      text-align: center;
+      padding-top: 5vh;
+      margin: 0;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+    .section-title {
+      font-size: 1.2em;
+      margin-top: 20px;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .time {
+      font-size: 3.5em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    /* Container for each time unit (hours, minutes, seconds) */
+    .time-section {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 100px; /* Fixed width for consistency */
+    }
+    /* Each individual digit */
+    .digit {
+      display: inline-block;
+      min-width: 1ch;
+    }
+    /* Colon styling with extra margin */
+    .colon {
+      display: inline-block;
+      margin: 0 10px;
+      font-weight: bold;
+    }
+    /* AM/PM container styling */
+    .ampm {
+      display: inline-block;
+      width: 70px;
+      margin-left: 10px;
+    }
+    /* Fade and slide animation for a digit */
+    @keyframes fadeSlide {
+      0% {
+        opacity: 1;
+        transform: translateY(0px);
+      }
+      50% {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0px);
+      }
+    }
+    .animate-digit {
+      animation: fadeSlide 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+  <h1></h1>
+
+  <!-- Current Time Section -->
+  <div class="section-title">Current Time</div>
+  <div class="time" id="time_current">
+    <!-- Hours container -->
+    <div class="time-section" id="hours_current">
+      <span class="digit" id="h1_current">{{ initial_hours|slice:":1" }}</span>
+      <span class="digit" id="h2_current">{{ initial_hours|slice:"1:" }}</span>
+    </div>
+    <span class="colon">:</span>
+    <!-- Minutes container -->
+    <div class="time-section" id="minutes_current">
+      <span class="digit" id="m1_current">{{ initial_minutes|slice:":1" }}</span>
+      <span class="digit" id="m2_current">{{ initial_minutes|slice:"1:" }}</span>
+    </div>
+    <span class="colon">:</span>
+    <!-- Seconds container -->
+    <div class="time-section" id="seconds_current">
+      <span class="digit" id="s1_current">{{ initial_seconds|slice:":1" }}</span>
+      <span class="digit" id="s2_current">{{ initial_seconds|slice:"1:" }}</span>
+    </div>
+    <span class="ampm" id="ampm_current">{{ initial_ampm }}</span>
+  </div>
+
+  <!-- Time Minus 4 Hours Section -->
+  <div class="section-title">Time - 4 Hours</div>
+  <div class="time" id="time_minus">
+    <div class="time-section" id="hours_minus">
+      <span class="digit" id="h1_minus"></span>
+      <span class="digit" id="h2_minus"></span>
+    </div>
+    <span class="colon">:</span>
+    <div class="time-section" id="minutes_minus">
+      <span class="digit" id="m1_minus"></span>
+      <span class="digit" id="m2_minus"></span>
+    </div>
+    <span class="colon">:</span>
+    <div class="time-section" id="seconds_minus">
+      <span class="digit" id="s1_minus"></span>
+      <span class="digit" id="s2_minus"></span>
+    </div>
+    <span class="ampm" id="ampm_minus"></span>
+  </div>
+
+  <!-- Time Plus 4 Hours Section -->
+  <div class="section-title">Time + 4 Hours</div>
+  <div class="time" id="time_plus">
+    <div class="time-section" id="hours_plus">
+      <span class="digit" id="h1_plus"></span>
+      <span class="digit" id="h2_plus"></span>
+    </div>
+    <span class="colon">:</span>
+    <div class="time-section" id="minutes_plus">
+      <span class="digit" id="m1_plus"></span>
+      <span class="digit" id="m2_plus"></span>
+    </div>
+    <span class="colon">:</span>
+    <div class="time-section" id="seconds_plus">
+      <span class="digit" id="s1_plus"></span>
+      <span class="digit" id="s2_plus"></span>
+    </div>
+    <span class="ampm" id="ampm_plus"></span>
+  </div>
+
+  <script>
+    // Global object to store previous digit values for each section
+    var prevValues = {
+      current: { hours: [], minutes: [], seconds: [] },
+      minus:   { hours: [], minutes: [], seconds: [] },
+      plus:    { hours: [], minutes: [], seconds: [] }
+    };
+
+    // Helper function to update a single digit element if it changes
+    function updateDigit(elementId, newDigit, prevArray, index) {
+      const el = document.getElementById(elementId);
+      if (!prevArray || prevArray[index] !== newDigit) {
+        el.innerText = newDigit;
+        el.classList.add("animate-digit");
+        setTimeout(() => el.classList.remove("animate-digit"), 500);
+      }
+    }
+
+    // Helper function to update a container (current, minus, plus)
+    function updateContainer(timeDate, prefix) {
+      let hours = timeDate.getHours();
+      const minutes = timeDate.getMinutes();
+      const seconds = timeDate.getSeconds();
+      const ampm = hours >= 12 ? "PM" : "AM";
+
+      // Convert to 12-hour format
+      hours = hours % 12 || 12;
+
+      const strHours = String(hours).padStart(2, "0");
+      const strMinutes = String(minutes).padStart(2, "0");
+      const strSeconds = String(seconds).padStart(2, "0");
+
+      const hoursDigits = [ strHours.charAt(0), strHours.charAt(1) ];
+      const minutesDigits = [ strMinutes.charAt(0), strMinutes.charAt(1) ];
+      const secondsDigits = [ strSeconds.charAt(0), strSeconds.charAt(1) ];
+
+      // Update digits for hours
+      updateDigit("h1_" + prefix, hoursDigits[0], prevValues[prefix].hours, 0);
+      updateDigit("h2_" + prefix, hoursDigits[1], prevValues[prefix].hours, 1);
+      // Update digits for minutes
+      updateDigit("m1_" + prefix, minutesDigits[0], prevValues[prefix].minutes, 0);
+      updateDigit("m2_" + prefix, minutesDigits[1], prevValues[prefix].minutes, 1);
+      // Update digits for seconds
+      updateDigit("s1_" + prefix, secondsDigits[0], prevValues[prefix].seconds, 0);
+      updateDigit("s2_" + prefix, secondsDigits[1], prevValues[prefix].seconds, 1);
+      // Update AM/PM (no animation)
+      document.getElementById("ampm_" + prefix).innerText = ampm;
+
+      // Store current digits for next update
+      prevValues[prefix].hours = hoursDigits;
+      prevValues[prefix].minutes = minutesDigits;
+      prevValues[prefix].seconds = secondsDigits;
+    }
+
+    function updateAllTimes() {
+      const now = new Date();
+      // Current Time
+      updateContainer(now, "current");
+
+      // Time - 4 Hours
+      const minusTime = new Date(now.getTime() - 4 * 3600 * 1000);
+      updateContainer(minusTime, "minus");
+
+      // Time + 4 Hours
+      const plusTime = new Date(now.getTime() + 4 * 3600 * 1000);
+      updateContainer(plusTime, "plus");
+    }
+
+    // Update every second
+    setInterval(updateAllTimes, 1000);
+    // Initial update
+    updateAllTimes();
+  </script>
+</body>
+</html>
