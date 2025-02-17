@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Table of Squares</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    table {
+      border-collapse: collapse;
+      width: 50%;
+      margin: 20px auto;
+    }
+    th, td {
+      border: 1px solid #999;
+      padding: 8px 12px;
+      text-align: center;
+    }
+    th {
+      background-color: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <h1>Table of Squares for {{ n }}</h1>
+  <table>
+    <tr>
+      <th>Number</th>
+      <th>Square</th>
+    </tr>
+    {% for number, square in squares %}
+    <tr>
+      <td>{{ number }}</td>
+      <td>{{ square }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+</html>
